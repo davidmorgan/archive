@@ -89,7 +89,8 @@ class GZipEncoder {
     if (data is List<int>) {
       deflate = Deflate(data, level: level, output: output_stream);
     } else {
-      deflate = Deflate.buffer(data as InputStreamBase, level: level, output: output_stream);
+      deflate = Deflate.buffer(data as InputStreamBase,
+          level: level, output: output_stream);
     }
 
     if (!(output_stream is OutputStream)) {

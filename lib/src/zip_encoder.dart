@@ -137,13 +137,13 @@ class ZipEncoder {
     }
 
     var filename = Utf8Encoder().convert(file.name);
-    var comment = file.comment != null ? Utf8Encoder().convert(file.comment) : null;
+    var comment =
+        file.comment != null ? Utf8Encoder().convert(file.comment) : null;
 
     _data.localFileSize += 30 + filename.length + compressedData.length;
 
-    _data.centralDirectorySize += 46 +
-        filename.length +
-        (comment != null ? comment.length : 0);
+    _data.centralDirectorySize +=
+        46 + filename.length + (comment != null ? comment.length : 0);
 
     fileData.crc32 = crc32;
     fileData.compressedSize = compressedData.length;
@@ -170,8 +170,8 @@ class ZipEncoder {
 
     final version = VERSION;
     final flags = 0;
-    final compressionMethod = fileData.compress
-        ? ZipFile.DEFLATE : ZipFile.STORE;
+    final compressionMethod =
+        fileData.compress ? ZipFile.DEFLATE : ZipFile.STORE;
     final lastModFileTime = fileData.time;
     final lastModFileDate = fileData.date;
     final crc32 = fileData.crc32;

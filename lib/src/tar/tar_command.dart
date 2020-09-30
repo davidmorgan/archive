@@ -50,8 +50,7 @@ Directory extractFiles(String inputPath, String outputPath) {
     if (!file.isFile) {
       continue;
     }
-    final f = File(
-        '${outputPath}${Platform.pathSeparator}${file.filename}');
+    final f = File('${outputPath}${Platform.pathSeparator}${file.filename}');
     f.parent.createSync(recursive: true);
     f.writeAsBytesSync(file.contentBytes);
     print('  extracted ${file.filename}');

@@ -15,8 +15,7 @@ void main() {
 
     test('encode/decode', () {
       final compressed = GZipEncoder().encode(buffer);
-      final decompressed =
-          GZipDecoder().decodeBytes(compressed, verify: true);
+      final decompressed = GZipDecoder().decodeBytes(compressed, verify: true);
       expect(decompressed.length, equals(buffer.length));
       for (var i = 0; i < buffer.length; ++i) {
         expect(decompressed[i], equals(buffer[i]));

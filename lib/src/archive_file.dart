@@ -30,7 +30,8 @@ class ArchiveFile {
     return mode & 0x1FF;
   }
 
-  ArchiveFile(this.name, this.size, dynamic content, [this._compressionType = STORE]) {
+  ArchiveFile(this.name, this.size, dynamic content,
+      [this._compressionType = STORE]) {
     if (content is List<int>) {
       _content = content;
       _rawContent = InputStream(_content);

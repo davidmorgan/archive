@@ -292,8 +292,7 @@ void main() {
     var bdata = 'hello world';
     var bytes = Uint8List.fromList(bdata.codeUnits);
     final name = 'abc.txt';
-    final afile =
-        ArchiveFile.noCompress(name, bytes.lengthInBytes, bytes);
+    final afile = ArchiveFile.noCompress(name, bytes.lengthInBytes, bytes);
     archive.addFile(afile);
 
     var zip_data = ZipEncoder().encode(archive);
@@ -318,7 +317,8 @@ void main() {
     var b = File(p.join(testDirPath, 'res/zip/hello.txt'));
     final b_bytes = b.readAsBytesSync();
 
-    final archive = ZipDecoder().decodeBytes(bytes, verify: true, password: 'test1234');
+    final archive =
+        ZipDecoder().decodeBytes(bytes, verify: true, password: 'test1234');
     expect(archive.numberOfFiles(), equals(1));
 
     for (var i = 0; i < archive.numberOfFiles(); ++i) {
@@ -377,7 +377,7 @@ void main() {
       var bytes = file.readAsBytesSync();
 
       final zipDecoder = ZipDecoder();
-      final archive =zipDecoder.decodeBytes(bytes, verify: true);
+      final archive = zipDecoder.decodeBytes(bytes, verify: true);
       final zipFiles = zipDecoder.directory.fileHeaders;
 
       if (z.containsKey('Comment')) {

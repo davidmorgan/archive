@@ -263,8 +263,7 @@ class InputFileStream extends InputStreamBase {
     }
 
     if (_remainingBufferSize >= length) {
-      final bytes =
-          _buffer.sublist(_bufferPosition, _bufferPosition + length);
+      final bytes = _buffer.sublist(_bufferPosition, _bufferPosition + length);
       _bufferPosition += length;
       return InputStream(bytes);
     }
@@ -320,15 +319,13 @@ class InputFileStream extends InputStreamBase {
         }
         codes.add(c);
       }
-      throw ArchiveException(
-          'EOF reached without finding string terminator');
+      throw ArchiveException('EOF reached without finding string terminator');
     }
 
     final s = readBytes(size);
     final bytes = s.toUint8List();
-    final str = utf8
-        ? Utf8Decoder().convert(bytes)
-        : String.fromCharCodes(bytes);
+    final str =
+        utf8 ? Utf8Decoder().convert(bytes) : String.fromCharCodes(bytes);
     return str;
   }
 

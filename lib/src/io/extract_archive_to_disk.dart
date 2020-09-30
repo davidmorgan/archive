@@ -17,15 +17,13 @@ void extractArchiveToDisk(Archive archive, String outputPath) {
     if (!file.isFile) {
       continue;
     }
-    final f = File(
-        '${outputPath}${Platform.pathSeparator}${file.name}');
+    final f = File('${outputPath}${Platform.pathSeparator}${file.name}');
     f.parent.createSync(recursive: true);
     f.writeAsBytesSync(file.content as List<int>);
   }
 }
 
-void extractFileToDisk(String inputPath, String outputPath,
-    {String password}) {
+void extractFileToDisk(String inputPath, String outputPath, {String password}) {
   Directory tempDir;
   var archivePath = inputPath;
 
@@ -60,8 +58,7 @@ void extractFileToDisk(String inputPath, String outputPath,
     if (!file.isFile) {
       continue;
     }
-    final f = File(
-        '${outputPath}${Platform.pathSeparator}${file.name}');
+    final f = File('${outputPath}${Platform.pathSeparator}${file.name}');
     f.parent.createSync(recursive: true);
     f.writeAsBytesSync(file.content as List<int>);
   }

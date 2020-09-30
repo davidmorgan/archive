@@ -18,7 +18,7 @@ class ZipFileEncoder {
     final zip_path = filename ?? '${dirPath}.zip';
     level ??= GZIP;
     create(zip_path, level: level);
-    addDirectory(dir, includeDirName: false, level : level);
+    addDirectory(dir, includeDirName: false, level: level);
     close();
   }
 
@@ -42,18 +42,17 @@ class ZipFileEncoder {
       final f = file as File;
       final dir_name = path.basename(dir.path);
       final rel_path = path.relative(f.path, from: dir.path);
-      addFile(f, includeDirName ? (dir_name + '/' + rel_path) : rel_path, level);
+      addFile(
+          f, includeDirName ? (dir_name + '/' + rel_path) : rel_path, level);
     }
   }
 
   void addFile(File file, [String filename, int level = GZIP]) {
     var file_stream = InputFileStream.file(file);
     var archiveFile = ArchiveFile.stream(
-        filename ?? path.basename(file.path),
-        file.lengthSync(),
-        file_stream);
+        filename ?? path.basename(file.path), file.lengthSync(), file_stream);
 
-    if(level == STORE) {
+    if (level == STORE) {
       archiveFile.compress = false;
     }
 

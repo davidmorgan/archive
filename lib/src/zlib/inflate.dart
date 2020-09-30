@@ -227,8 +227,7 @@ class Inflate {
     // distance code
     final distLengths = Uint8List(numDistanceCodes);
 
-    final litlen =
-        _decode(numLitLengthCodes, codeLengthsTable, litlenLengths);
+    final litlen = _decode(numLitLengthCodes, codeLengthsTable, litlenLengths);
 
     final dist = _decode(numDistanceCodes, codeLengthsTable, distLengths);
 
@@ -668,8 +667,7 @@ class Inflate {
     5,
     5
   ];
-  final HuffmanTable _fixedDistanceTable =
-      HuffmanTable(_FIXED_DISTANCE_TABLE);
+  final HuffmanTable _fixedDistanceTable = HuffmanTable(_FIXED_DISTANCE_TABLE);
 
   /// Max backward length for LZ77.
   static const int _MAX_BACKWARD_LENGTH = 32768; // ignore: unused_field

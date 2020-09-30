@@ -94,8 +94,7 @@ void extractDart(List<String> urls) {
       }
       final filename = file.filename;
       try {
-        final f =
-            File('${outputPath}${Platform.pathSeparator}${filename}');
+        final f = File('${outputPath}${Platform.pathSeparator}${filename}');
         f.parent.createSync(recursive: true);
         f.writeAsBytesSync(file.content as List<int>);
       } catch (e) {

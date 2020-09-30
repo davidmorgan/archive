@@ -3447,8 +3447,8 @@ class _StaticTree {
   static final staticDDesc = _StaticTree(
       STATIC_DTREE, _HuffmanTree.EXTRA_D_BITS, 0, D_CODES, MAX_BITS);
 
-  static final staticBlDesc = _StaticTree(
-      null, _HuffmanTree.EXTRA_BL_BITS, 0, BL_CODES, MAX_BL_BITS);
+  static final staticBlDesc =
+      _StaticTree(null, _HuffmanTree.EXTRA_BL_BITS, 0, BL_CODES, MAX_BL_BITS);
 
   List<int> staticTree; // static tree or null
   List<int> extraBits; // extra bits for each code or null
@@ -3459,6 +3459,7 @@ class _StaticTree {
   _StaticTree(this.staticTree, this.extraBits, this.extraBase, this.numElements,
       this.maxLength);
 }
+
 /// Performs an unsigned bitwise right shift with the specified number
 int _rshift(int number, int bits) {
   if (number >= 0) {

@@ -16,8 +16,8 @@ class BZip2Decoder {
         verify: verify);
   }
 
-  List<int> decodeBuffer(InputStreamBase _input, {bool verify = false,
-                         OutputStreamBase output}) {
+  List<int> decodeBuffer(InputStreamBase _input,
+      {bool verify = false, OutputStreamBase output}) {
     output ??= OutputStream();
     final br = Bz2BitReader(_input);
 
@@ -225,8 +225,8 @@ class BZip2Decoder {
         }
       }
 
-      _hbCreateDecodeTables(_limit[t], _base[t], _perm[t], _len[t],
-          minLen, maxLen, alphaSize);
+      _hbCreateDecodeTables(
+          _limit[t], _base[t], _perm[t], _len[t], minLen, maxLen, alphaSize);
 
       _minLens[t] = minLen;
     }

@@ -21,8 +21,7 @@ Archive createArchiveFromDirectory(Directory dir,
 
     final file_stream = InputFileStream.file(f);
 
-    final af =
-        ArchiveFile.stream(filename, f.lengthSync(), file_stream);
+    final af = ArchiveFile.stream(filename, f.lengthSync(), file_stream);
     af.lastModTime = f.lastModifiedSync().millisecondsSinceEpoch;
     af.mode = f.statSync().mode;
 

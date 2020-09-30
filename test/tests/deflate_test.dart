@@ -8,8 +8,7 @@ void main() {
   }
 
   test('NO_COMPRESSION', () {
-    final deflated =
-        Deflate(buffer, level: Deflate.NO_COMPRESSION).getBytes();
+    final deflated = Deflate(buffer, level: Deflate.NO_COMPRESSION).getBytes();
 
     final inflated = Inflate(deflated).getBytes();
 
@@ -20,8 +19,7 @@ void main() {
   });
 
   test('BEST_SPEED', () {
-    final deflated =
-        Deflate(buffer, level: Deflate.BEST_SPEED).getBytes();
+    final deflated = Deflate(buffer, level: Deflate.BEST_SPEED).getBytes();
 
     final inflated = Inflate(deflated).getBytes();
 

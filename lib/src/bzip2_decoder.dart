@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-import 'package:archive/archive_io.dart';
 
 import 'bzip2/bzip2.dart';
 import 'bzip2/bz2_bit_reader.dart';
@@ -17,7 +16,7 @@ class BZip2Decoder {
   }
 
   List<int> decodeBuffer(InputStreamBase _input,
-      {bool verify = false, OutputStreamBase output}) {
+      {bool verify = false, OutputStreamBase? output}) {
     output ??= OutputStream();
     final br = Bz2BitReader(_input);
 
@@ -74,7 +73,7 @@ class BZip2Decoder {
           return [];
         }
 
-        return (output as OutputStream).getBytes();
+        return output.getBytes();
       }
     }
   }
@@ -177,7 +176,7 @@ class BZip2Decoder {
     }
 
     // Now the coding tables
-    _len = List<Uint8List>(BZ_N_GROUPS);
+    _len = List<Uint8List?>.filled(BZ_N_GROUPS, null);
 
     for (var t = 0; t < numGroups; ++t) {
       _len[t] = Uint8List(BZ_MAX_ALPHA_SIZE);
@@ -199,14 +198,14 @@ class BZip2Decoder {
             c--;
           }
         }
-        _len[t][i] = c;
+        _len[t]![i] = c;
       }
     }
 
     // Create the Huffman decoding tables
-    _limit = List<Int32List>(BZ_N_GROUPS);
-    _base = List<Int32List>(BZ_N_GROUPS);
-    _perm = List<Int32List>(BZ_N_GROUPS);
+    _limit = List<Int32List?>.filled(BZ_N_GROUPS, null);
+    _base = List<Int32List?>.filled(BZ_N_GROUPS, null);
+    _perm = List<Int32List?>.filled(BZ_N_GROUPS, null);
     _minLens = Int32List(BZ_N_GROUPS);
 
     for (var t = 0; t < numGroups; t++) {
@@ -217,16 +216,16 @@ class BZip2Decoder {
       var minLen = 32;
       var maxLen = 0;
       for (var i = 0; i < alphaSize; ++i) {
-        if (_len[t][i] > maxLen) {
-          maxLen = _len[t][i];
+        if (_len[t]![i] > maxLen) {
+          maxLen = _len[t]![i];
         }
-        if (_len[t][i] < minLen) {
-          minLen = _len[t][i];
+        if (_len[t]![i] < minLen) {
+          minLen = _len[t]![i];
         }
       }
 
       _hbCreateDecodeTables(
-          _limit[t], _base[t], _perm[t], _len[t], minLen, maxLen, alphaSize);
+          _limit[t], _base[t], _perm[t], _len[t]!, minLen, maxLen, alphaSize);
 
       _minLens[t] = minLen;
     }
@@ -722,7 +721,7 @@ class BZip2Decoder {
       if (zn > 20) {
         throw ArchiveException('Data error');
       }
-      if (zvec <= _gLimit[zn]) {
+      if (zvec <= _gLimit![zn]) {
         break;
       }
 
@@ -731,51 +730,51 @@ class BZip2Decoder {
       zvec = (zvec << 1) | zj;
     }
 
-    if (zvec - _gBase[zn] < 0 || zvec - _gBase[zn] >= BZ_MAX_ALPHA_SIZE) {
+    if (zvec - _gBase![zn] < 0 || zvec - _gBase![zn] >= BZ_MAX_ALPHA_SIZE) {
       throw ArchiveException('Data error');
     }
 
-    return _gPerm[zvec - _gBase[zn]];
+    return _gPerm![zvec - _gBase![zn]];
   }
 
-  void _hbCreateDecodeTables(Int32List limit, Int32List base, Int32List perm,
+  void _hbCreateDecodeTables(Int32List? limit, Int32List? base, Int32List? perm,
       Uint8List length, int minLen, int maxLen, int alphaSize) {
     var pp = 0;
     for (var i = minLen; i <= maxLen; i++) {
       for (var j = 0; j < alphaSize; j++) {
         if (length[j] == i) {
-          perm[pp] = j;
+          perm![pp] = j;
           pp++;
         }
       }
     }
 
     for (var i = 0; i < BZ_MAX_CODE_LEN; i++) {
-      base[i] = 0;
+      base![i] = 0;
     }
 
     for (var i = 0; i < alphaSize; i++) {
-      base[length[i] + 1]++;
+      base![length[i] + 1]++;
     }
 
     for (var i = 1; i < BZ_MAX_CODE_LEN; i++) {
-      base[i] += base[i - 1];
+      base![i] += base[i - 1];
     }
 
     for (var i = 0; i < BZ_MAX_CODE_LEN; i++) {
-      limit[i] = 0;
+      limit![i] = 0;
     }
 
     var vec = 0;
 
     for (var i = minLen; i <= maxLen; i++) {
-      vec += (base[i + 1] - base[i]);
-      limit[i] = vec - 1;
+      vec += (base![i + 1] - base[i]);
+      limit![i] = vec - 1;
       vec <<= 1;
     }
 
     for (var i = minLen + 1; i <= maxLen; i++) {
-      base[i] = ((limit[i - 1] + 1) << 1) - base[i];
+      base![i] = ((limit![i - 1] + 1) << 1) - base[i];
     }
   }
 
@@ -789,32 +788,32 @@ class BZip2Decoder {
     }
   }
 
-  int _blockSize100k;
-  Uint32List _tt;
-  Uint8List _inUse16;
-  Uint8List _inUse;
-  Uint8List _seqToUnseq;
-  Uint8List _mtfa;
-  Int32List _mtfbase;
-  Uint8List _selectorMtf;
-  Uint8List _selector;
-  List<Int32List> _limit;
-  List<Int32List> _base;
-  List<Int32List> _perm;
-  Int32List _minLens;
-  Int32List _unzftab;
+  late int _blockSize100k;
+  late Uint32List _tt;
+  late Uint8List _inUse16;
+  late Uint8List _inUse;
+  late Uint8List _seqToUnseq;
+  late Uint8List _mtfa;
+  late Int32List _mtfbase;
+  late Uint8List _selectorMtf;
+  late Uint8List _selector;
+  late List<Int32List?> _limit;
+  late List<Int32List?> _base;
+  late List<Int32List?> _perm;
+  late Int32List _minLens;
+  late Int32List _unzftab;
 
-  int _numSelectors;
+  late int _numSelectors;
   int _groupPos = 0;
   int _groupNo = -1;
   int _gSel = 0;
   int _gMinlen = 0;
-  Int32List _gLimit;
-  Int32List _gPerm;
-  Int32List _gBase;
-  Int32List _cftab;
+  Int32List? _gLimit;
+  Int32List? _gPerm;
+  Int32List? _gBase;
+  late Int32List _cftab;
 
-  List<Uint8List> _len;
+  late List<Uint8List?> _len;
   int _numInUse = 0;
 
   static const int BZ_N_GROUPS = 6;

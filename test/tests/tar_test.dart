@@ -222,12 +222,12 @@ void main() {
 
     var t_file = archive.fileName(0);
     expect(t_file, equals('a.txt'));
-    var t_bytes = archive.fileData(0);
+    var t_bytes = archive.fileData(0)!;
     compare_bytes(t_bytes, a_bytes);
 
     t_file = archive.fileName(1);
     expect(t_file, equals('cat.jpg'));
-    t_bytes = archive.fileData(1);
+    t_bytes = archive.fileData(1)!;
     compare_bytes(t_bytes, b_bytes);
 
     final encoded = tarEncoder.encode(archive);
@@ -241,12 +241,12 @@ void main() {
 
     t_file = archive2.fileName(0);
     expect(t_file, equals('a.txt'));
-    t_bytes = archive2.fileData(0);
+    t_bytes = archive2.fileData(0)!;
     compare_bytes(t_bytes, a_bytes);
 
     t_file = archive2.fileName(1);
     expect(t_file, equals('cat.jpg'));
-    t_bytes = archive2.fileData(1);
+    t_bytes = archive2.fileData(1)!;
     compare_bytes(t_bytes, b_bytes);
   });
 

@@ -9,13 +9,14 @@ class OutputFileStream extends OutputStreamBase {
   String path;
   final int byteOrder;
   int _length;
-  File _file;
-  RandomAccessFile _fp;
+  File? _file;
+  late RandomAccessFile _fp;
 
-  OutputFileStream(this.path, {this.byteOrder = LITTLE_ENDIAN}) : _length = 0 {
-    _file = File(path);
-    _file.createSync(recursive: true);
-    _fp = _file.openSync(mode: FileMode.write);
+  OutputFileStream(this.path, {this.byteOrder = LITTLE_ENDIAN})
+      : _length = 0,
+        _file = File(path) {
+    _file!.createSync(recursive: true);
+    _fp = _file!.openSync(mode: FileMode.write);
   }
 
   @override
@@ -35,9 +36,8 @@ class OutputFileStream extends OutputStreamBase {
 
   /// Write a set of bytes to the end of the buffer.
   @override
-  void writeBytes(dynamic bytes, [int len]) {
+  void writeBytes(dynamic bytes, [int? len]) {
     len ??= bytes.length as int;
-
     if (bytes is InputFileStream) {
       while (!bytes.isEOS) {
         final len = bytes.bufferRemaining;
@@ -90,7 +90,7 @@ class OutputFileStream extends OutputStreamBase {
     writeByte((value >> 24) & 0xff);
   }
 
-  List<int> subset(int start, [int end]) {
+  List<int> subset(int start, [int? end]) {
     final pos = _fp.positionSync();
     if (start < 0) {
       start = pos + start;

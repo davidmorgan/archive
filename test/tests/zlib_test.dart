@@ -2,7 +2,7 @@ import 'package:archive/archive.dart';
 import 'package:test/test.dart';
 
 void main() {
-  final buffer = List<int>(10000);
+  final buffer = List<int>.filled(10000, 0);
   for (var i = 0; i < buffer.length; ++i) {
     buffer[i] = i % 256;
   }

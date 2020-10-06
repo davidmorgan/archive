@@ -18,7 +18,7 @@ class TarDecoder {
     final archive = Archive();
     files.clear();
 
-    String nextName;
+    String? nextName;
 
     // TarFile paxHeader = null;
     while (!input.isEOS) {
@@ -31,7 +31,7 @@ class TarDecoder {
       final tf = TarFile.read(input, storeData: storeData);
       // GNU tar puts filenames in files when they exceed tar's native length.
       if (tf.filename == '././@LongLink') {
-        nextName = tf.rawContent.readString();
+        nextName = tf.rawContent!.readString();
         continue;
       }
 
@@ -49,7 +49,7 @@ class TarDecoder {
         files.add(tf);
 
         final file =
-            ArchiveFile(nextName ?? tf.filename, tf.fileSize, tf.rawContent);
+            ArchiveFile(nextName ?? tf.filename!, tf.fileSize, tf.rawContent);
 
         file.mode = tf.mode;
         file.ownerId = tf.ownerId;

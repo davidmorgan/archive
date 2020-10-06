@@ -43,15 +43,15 @@ class TarFile {
   static const String TYPE_EX_HEADER2 = 'X';
 
   // Pre-POSIX Format
-  String filename; // 100 bytes
+  String? filename; // 100 bytes
   int mode = 644; // 8 bytes
   int ownerId = 0; // 8 bytes
   int groupId = 0; // 8 bytes
-  int fileSize = 0; // 12 bytes
+  int? fileSize = 0; // 12 bytes
   int lastModTime = 0; // 12 bytes
   int checksum = 0; // 8 bytes
   String typeFlag = '0'; // 1 byte
-  String nameOfLinkedFile; // 100 bytes
+  String? nameOfLinkedFile; // 100 bytes
   // UStar Format
   String ustarIndicator = ''; // 6 bytes (ustar)
   String ustarVersion = ''; // 2 bytes (00)
@@ -60,7 +60,7 @@ class TarFile {
   int deviceMajorNumber = 0; // 8 bytes
   int deviceMinorNumber = 0; // 8 bytes
   String filenamePrefix = ''; // 155 bytes
-  InputStream _rawContent;
+  InputStream? _rawContent;
   dynamic _content;
 
   TarFile();
@@ -92,13 +92,13 @@ class TarFile {
     }
 
     if (storeData || filename == '././@LongLink') {
-      _rawContent = input.readBytes(fileSize);
+      _rawContent = input.readBytes(fileSize!);
     } else {
-      input.skip(fileSize);
+      input.skip(fileSize!);
     }
 
-    if (isFile && fileSize > 0) {
-      final remainder = fileSize % 512;
+    if (isFile && fileSize! > 0) {
+      final remainder = fileSize! % 512;
       var skiplen = 0;
       if (remainder != 0) {
         skiplen = 512 - remainder;
@@ -111,21 +111,21 @@ class TarFile {
 
   bool get isSymLink => typeFlag == TYPE_SYMBOLIC_LINK;
 
-  InputStream get rawContent => _rawContent;
+  InputStream? get rawContent => _rawContent;
 
   dynamic get content {
-    _content ??= _rawContent.toUint8List();
+    _content ??= _rawContent!.toUint8List();
     return _content;
   }
 
-  List<int> get contentBytes => content as List<int>;
+  List<int>? get contentBytes => content as List<int>?;
 
   set content(dynamic data) => _content = data;
 
-  int get size => _content != null
-      ? _content.length as int
+  int? get size => _content != null
+      ? _content.length as int?
       : _rawContent != null
-          ? _rawContent.length
+          ? _rawContent!.length
           : 0;
 
   @override
@@ -138,11 +138,11 @@ class TarFile {
     // character strings. All other fields are zero-filled octal numbers in
     // ASCII. Each numeric field of width w contains w minus 1 digits, and a null.
     final header = OutputStream();
-    _writeString(header, filename, 100);
+    _writeString(header, filename!, 100);
     _writeInt(header, mode, 8);
     _writeInt(header, ownerId, 8);
     _writeInt(header, groupId, 8);
-    _writeInt(header, fileSize, 12);
+    _writeInt(header, fileSize!, 12);
     _writeInt(header, lastModTime, 12);
     _writeString(header, '        ', 8); // checksum placeholder
     _writeString(header, typeFlag, 1);
@@ -182,9 +182,9 @@ class TarFile {
       output.writeInputStream(_rawContent);
     }
 
-    if (isFile && fileSize > 0) {
+    if (isFile && fileSize! > 0) {
       // Pad to 512-byte boundary
-      final remainder = fileSize % 512;
+      final remainder = fileSize! % 512;
       if (remainder != 0) {
         final skiplen = 512 - remainder;
         nulls = Uint8List(skiplen); // typed arrays default to 0.

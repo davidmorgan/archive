@@ -9,18 +9,18 @@ class ArchiveFile {
   String name;
 
   /// The uncompressed size of the file
-  int size = 0;
+  int? size = 0;
   int mode = 420; // octal 644 (-rw-r--r--)
   int ownerId = 0;
   int groupId = 0;
   int lastModTime = 0;
   bool isFile = true;
   bool isSymbolicLink = false;
-  String nameOfLinkedFile = '';
+  String? nameOfLinkedFile = '';
 
   /// The crc32 checksum of the uncompressed content.
-  int crc32;
-  String comment;
+  int? crc32;
+  String? comment;
 
   /// If false, this file will not be compressed when encoded to an archive
   /// format such as zip.
@@ -71,7 +71,7 @@ class ArchiveFile {
       if (_compressionType == DEFLATE) {
         _content = Inflate.buffer(_rawContent, size).getBytes();
       } else {
-        _content = _rawContent.toUint8List();
+        _content = _rawContent!.toUint8List();
       }
       _compressionType = STORE;
     }
@@ -81,15 +81,15 @@ class ArchiveFile {
   bool get isCompressed => _compressionType != STORE;
 
   /// What type of compression is the raw data stored in
-  int get compressionType => _compressionType;
+  int? get compressionType => _compressionType;
 
   /// Get the content without decompressing it first.
-  InputStream get rawContent => _rawContent;
+  InputStream? get rawContent => _rawContent;
 
   @override
   String toString() => name;
 
-  int _compressionType;
-  InputStream _rawContent;
+  int? _compressionType;
+  InputStream? _rawContent;
   dynamic _content;
 }

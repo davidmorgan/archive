@@ -252,11 +252,11 @@ void main() {
   test('zip executable', () async {
     // Only tested on linux so far
     if (Platform.isLinux || Platform.isMacOS) {
-      var path = p.join('.dart_tool', 'archive', 'test', 'zip_executable');
+      var path = Directory.systemTemp.createTempSync('zip_executable').path;
       var srcPath = p.join(path, 'src');
 
       try {
-        await Directory(path).deleteSync(recursive: true);
+        Directory(path).deleteSync(recursive: true);
       } catch (_) {}
       final dir = Directory(srcPath);
       await dir.create(recursive: true);
@@ -267,7 +267,7 @@ void main() {
       await Process.run('chmod', ['+x', file.path]);
 
       final subdir = Directory(p.join(dir.path, 'subdir'));
-      await subdir.createSync(recursive: true);
+      subdir.createSync(recursive: true);
       var file2 = File(p.join(subdir.path, 'test2.bin'));
       await file2.writeAsString('bin2', flush: true);
       await Process.run('chmod', ['+x', file2.path]);
@@ -303,7 +303,7 @@ void main() {
 
     var arc = ZipDecoder().decodeBytes(zip_data, verify: true);
     expect(arc.numberOfFiles(), equals(1));
-    var arcData = arc.fileData(0);
+    var arcData = arc.fileData(0)!;
     expect(arcData.length, equals(bdata.length));
     for (var i = 0; i < arcData.length; ++i) {
       expect(arcData[i], equals(bdata.codeUnits[i]));
@@ -324,7 +324,7 @@ void main() {
     for (var i = 0; i < archive.numberOfFiles(); ++i) {
       final z_bytes = archive.fileData(i);
       if (archive.fileName(i) == 'hello.txt') {
-        compare_bytes(z_bytes, b_bytes);
+        compare_bytes(z_bytes!, b_bytes);
       } else {
         throw TestFailure('Invalid file found');
       }
@@ -345,9 +345,9 @@ void main() {
     for (var i = 0; i < archive.numberOfFiles(); ++i) {
       final z_bytes = archive.fileData(i);
       if (archive.fileName(i) == 'a.txt') {
-        compare_bytes(z_bytes, a_bytes);
+        compare_bytes(z_bytes!, a_bytes);
       } else if (archive.fileName(i) == 'cat.jpg') {
-        compare_bytes(z_bytes, b_bytes);
+        compare_bytes(z_bytes!, b_bytes);
       } else {
         throw TestFailure('Invalid file found');
       }
@@ -396,16 +396,16 @@ void main() {
         var hdr = z['File'][i] as Map<String, dynamic>;
 
         if (hdr.containsKey('Name')) {
-          expect(zipFile.filename, equals(hdr['Name']));
+          expect(zipFile!.filename, equals(hdr['Name']));
         }
         if (hdr.containsKey('Content')) {
-          expect(zipFile.content, equals(hdr['Content']));
+          expect(zipFile!.content, equals(hdr['Content']));
         }
         if (hdr.containsKey('VerifyChecksum')) {
-          expect(zipFile.verifyCrc32(), equals(hdr['VerifyChecksum']));
+          expect(zipFile!.verifyCrc32(), equals(hdr['VerifyChecksum']));
         }
         if (hdr.containsKey('isFile')) {
-          expect(archive.findFile(zipFile.filename).isFile, hdr['isFile']);
+          expect(archive.findFile(zipFile!.filename)!.isFile, hdr['isFile']);
         }
       }
     });

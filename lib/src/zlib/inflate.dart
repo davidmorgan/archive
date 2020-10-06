@@ -5,16 +5,16 @@ import '../util/output_stream.dart';
 import 'huffman_table.dart';
 
 class Inflate {
-  InputStreamBase input;
+  InputStreamBase? input;
   dynamic output;
 
-  Inflate(List<int> bytes, [int uncompressedSize])
+  Inflate(List<int> bytes, [int? uncompressedSize])
       : input = InputStream(bytes),
         output = OutputStream(size: uncompressedSize) {
     _inflate();
   }
 
-  Inflate.buffer(this.input, [int uncompressedSize])
+  Inflate.buffer(this.input, [int? uncompressedSize])
       : output = OutputStream(size: uncompressedSize) {
     _inflate();
   }
@@ -30,11 +30,11 @@ class Inflate {
       if (input != null) {
         i.offset = _blockPos;
       }
-      final inputLen = (input == null ? 0 : input.length);
+      final inputLen = (input == null ? 0 : input!.length);
       final newLen = inputLen + bytes.length;
       final newBytes = Uint8List(newLen);
       if (input != null) {
-        newBytes.setRange(0, input.length, i.buffer, i.offset);
+        newBytes.setRange(0, input!.length, i.buffer, i.offset);
       }
       newBytes.setRange(inputLen, newLen, bytes, 0);
       input = InputStream(newBytes);
@@ -43,13 +43,13 @@ class Inflate {
     }
   }
 
-  List<int> inflateNext() {
+  List<int>? inflateNext() {
     _bitBuffer = 0;
     _bitBufferLen = 0;
     if (output is OutputStream) {
       output.clear();
     }
-    if (input == null || input.isEOS) {
+    if (input == null || input!.isEOS) {
       return null;
     }
 
@@ -66,14 +66,14 @@ class Inflate {
     }
 
     if (output is OutputStream) {
-      return output.getBytes() as List<int>;
+      return output.getBytes() as List<int>?;
     }
     return null;
   }
 
   /// Get the decompressed data.
-  List<int> getBytes() {
-    return output.getBytes() as List<int>;
+  List<int>? getBytes() {
+    return output.getBytes() as List<int>?;
   }
 
   void _inflate() {
@@ -83,7 +83,7 @@ class Inflate {
       return;
     }
 
-    while (!input.isEOS) {
+    while (!input!.isEOS) {
       final more = _parseBlock();
       if (!more) {
         break;
@@ -94,7 +94,7 @@ class Inflate {
   /// Parse deflated block.  Returns true if there is more to read, false
   /// if we're done.
   bool _parseBlock() {
-    if (input.isEOS) {
+    if (input!.isEOS) {
       return false;
     }
 
@@ -133,12 +133,12 @@ class Inflate {
 
     // not enough buffer
     while (_bitBufferLen < length) {
-      if (input.isEOS) {
+      if (input!.isEOS) {
         throw ArchiveException('input buffer is broken');
       }
 
       // input byte
-      final octet = input.readByte();
+      final octet = input!.readByte();
 
       // concat octet
       _bitBuffer |= octet << _bitBufferLen;
@@ -160,18 +160,18 @@ class Inflate {
 
     // Not enough buffer
     while (_bitBufferLen < maxCodeLength) {
-      if (input.isEOS) {
+      if (input!.isEOS) {
         break;
       }
 
-      final octet = input.readByte();
+      final octet = input!.readByte();
 
       _bitBuffer |= octet << _bitBufferLen;
       _bitBufferLen += 8;
     }
 
     // read max length
-    final codeWithLength = codeTable[_bitBuffer & ((1 << maxCodeLength) - 1)];
+    final codeWithLength = codeTable![_bitBuffer & ((1 << maxCodeLength) - 1)];
     final codeLength = codeWithLength >> 16;
 
     _bitBuffer >>= codeLength;
@@ -194,11 +194,11 @@ class Inflate {
     }
 
     // check size
-    if (len > input.length) {
+    if (len > input!.length) {
       throw ArchiveException('Input buffer is broken');
     }
 
-    output.writeInputStream(input.readBytes(len));
+    output.writeInputStream(input!.readBytes(len));
   }
 
   void _parseFixedHuffmanBlock() {
@@ -284,7 +284,7 @@ class Inflate {
 
     while (_bitBufferLen >= 8) {
       _bitBufferLen -= 8;
-      input.rewind(1);
+      input!.rewind(1);
     }
   }
 

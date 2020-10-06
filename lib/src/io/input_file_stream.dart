@@ -6,19 +6,20 @@ import '../util/byte_order.dart';
 import '../util/input_stream.dart';
 
 class InputFileStream extends InputStreamBase {
-  String path;
-  RandomAccessFile _file;
+  String? path;
+  late RandomAccessFile _file;
   final int byteOrder;
   int _fileSize = 0;
   int _filePosition = 0;
-  List<int> _buffer;
+  late List<int> _buffer;
   int _bufferSize = 0;
   int _bufferPosition = 0;
-  int _maxBufferSize;
+  int _maxBufferSize = -1;
   static const int _kDefaultBufferSize = 4096;
 
-  InputFileStream(this.path,
-      {this.byteOrder = LITTLE_ENDIAN, int bufferSize = _kDefaultBufferSize}) {
+  InputFileStream(String path,
+      {this.byteOrder = LITTLE_ENDIAN, int bufferSize = _kDefaultBufferSize})
+      : path = path {
     _maxBufferSize = bufferSize;
     _buffer = Uint8List(_maxBufferSize);
     _file = File(path).openSync();
@@ -307,7 +308,7 @@ class InputFileStream extends InputStreamBase {
   /// Read a null-terminated string, or if [len] is provided, that number of
   /// bytes returned as a string.
   @override
-  String readString({int size, bool utf8 = true}) {
+  String readString({int? size, bool utf8 = true}) {
     if (size == null) {
       final codes = <int>[];
       while (!isEOS) {

@@ -61,7 +61,7 @@ class _ZLibDecoder extends ZLibDecoderBase {
     }
 
     // Inflate
-    final buffer = Inflate.buffer(input).getBytes();
+    final buffer = Inflate.buffer(input).getBytes()!;
 
     // verify adler-32
     final adler32 = input.readUint32();

@@ -34,7 +34,7 @@ abstract class InputStreamBase {
 
   /// Read a null-terminated string, or if [len] is provided, that number of
   /// bytes returned as a string.
-  String readString({int size, bool utf8});
+  String readString({int? size, bool utf8 = true});
 
   /// Read a 16-bit word from the stream.
   int readUint16();
@@ -60,7 +60,7 @@ class InputStream extends InputStreamBase {
 
   /// Create a InputStream for reading from a List<int>
   InputStream(dynamic data,
-      {this.byteOrder = LITTLE_ENDIAN, int start = 0, int length})
+      {this.byteOrder = LITTLE_ENDIAN, int start = 0, int? length})
       : buffer = data is TypedData
             ? Uint8List.view(
                 data.buffer, data.offsetInBytes, data.lengthInBytes)
@@ -115,7 +115,7 @@ class InputStream extends InputStreamBase {
   /// to the start of the buffer.  If [position] is not specified, the current
   /// read position is used. If [length] is not specified, the remainder of this
   /// stream is used.
-  InputStream subset([int position, int length]) {
+  InputStream subset([int? position, int? length]) {
     if (position == null) {
       position = offset;
     } else {
@@ -166,7 +166,7 @@ class InputStream extends InputStreamBase {
 
   /// Read [count] bytes from the stream.
   @override
-  InputStream readBytes(int count) {
+  InputStream readBytes(int? count) {
     final bytes = subset(offset - start, count);
     offset += bytes.length;
     return bytes;
@@ -175,7 +175,7 @@ class InputStream extends InputStreamBase {
   /// Read a null-terminated string, or if [len] is provided, that number of
   /// bytes returned as a string.
   @override
-  String readString({int size, bool utf8 = true}) {
+  String readString({int? size, bool utf8 = true}) {
     if (size == null) {
       final codes = <int>[];
       if (isEOS) {
@@ -285,5 +285,5 @@ class InputStream extends InputStreamBase {
     return Uint8List.fromList(buffer.sublist(offset, end));
   }
 
-  int _length;
+  late int _length;
 }

@@ -15,7 +15,7 @@ Archive createArchiveFromDirectory(Directory dir,
       continue;
     }
 
-    final f = file as File;
+    final f = file;
     var filename = path.relative(f.path, from: dir.path);
     filename = includeDirName ? (dir_name + '/' + filename) : filename;
 

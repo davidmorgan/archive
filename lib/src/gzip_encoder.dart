@@ -28,7 +28,7 @@ class GZipEncoder {
   static const int OS_ACORN_RISCOS = 13;
   static const int OS_UNKNOWN = 255;
 
-  List<int> encode(dynamic data, {int level, dynamic output}) {
+  List<int>? encode(dynamic data, {int? level, dynamic output}) {
     dynamic output_stream = output ?? OutputStream();
 
     // The GZip format has the following structure:

@@ -23,8 +23,8 @@ void extractArchiveToDisk(Archive archive, String outputPath) {
   }
 }
 
-void extractFileToDisk(String inputPath, String outputPath, {String password}) {
-  Directory tempDir;
+void extractFileToDisk(String inputPath, String outputPath, {String? password}) {
+  Directory? tempDir;
   var archivePath = inputPath;
 
   if (inputPath.endsWith('tar.gz') || inputPath.endsWith('tgz')) {
@@ -45,7 +45,7 @@ void extractFileToDisk(String inputPath, String outputPath, {String password}) {
     output.close();
   }
 
-  Archive archive;
+  late Archive archive;
   if (archivePath.endsWith('tar')) {
     final input = InputFileStream(archivePath);
     archive = TarDecoder().decodeBuffer(input);

@@ -194,7 +194,7 @@ void main() {
     var output = OutputFileStream(p.join(testDirPath, 'out/example2.tgz'));
     GZipEncoder().encode(input, output: output);
     input.close();
-    File(input.path).deleteSync();
+    File(input.path!).deleteSync();
   });
 
   test('stream zip encode', () {
